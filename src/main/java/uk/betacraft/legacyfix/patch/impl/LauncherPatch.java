@@ -110,7 +110,12 @@ public class LauncherPatch extends Patch {
 
         downloadServerFor1_3Snapshots();
 
-        File assetIndexFile = new File("../../../assets/indexes/" + assetIndex + ".json");
+        String assetDirectory = System.getenv("LEGACYFIX_ASSET_DIR");
+        if(assetDirectory == null) {
+            assetDirectory = "../../../assets";
+        }
+
+        File assetIndexFile = new File(assetDirectory + "/indexes/" + assetIndex + ".json");
 
         JSONObject assetIndexJson = null;
         if (assetIndexesJson.has(assetIndex)) {
