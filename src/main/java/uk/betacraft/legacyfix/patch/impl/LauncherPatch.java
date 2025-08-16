@@ -19,6 +19,7 @@ import uk.betacraft.util.WebData;
 
 import java.io.*;
 import java.lang.instrument.Instrumentation;
+import java.util.Map;
 import java.util.Set;
 
 public class LauncherPatch extends Patch {
@@ -100,6 +101,16 @@ public class LauncherPatch extends Patch {
         return true;
     }
 
+    private static String getRootDirectory() {
+        if(!isPrism) {
+            return "../../..";
+        }
+
+        String assetsDir = LegacyFixLauncher.getAssetsDir();
+
+        return assetsDir.split("/assets")[0];
+    }
+
     public static void downloadAssetsForPrism() {
         // don't process asset indexes for versions past 13w48b,
         // or for configurations where the user has specified the asset index,
@@ -110,12 +121,7 @@ public class LauncherPatch extends Patch {
 
         downloadServerFor1_3Snapshots();
 
-        String assetDirectory = System.getenv("LEGACYFIX_ASSET_DIR");
-        if(assetDirectory == null) {
-            assetDirectory = "../../../assets";
-        }
-
-        File assetIndexFile = new File(assetDirectory + "/indexes/" + assetIndex + ".json");
+        File assetIndexFile = new File(getRootDirectory() + "/assets/indexes/" + assetIndex + ".json");
 
         JSONObject assetIndexJson = null;
         if (assetIndexesJson.has(assetIndex)) {
@@ -236,7 +242,7 @@ public class LauncherPatch extends Patch {
         }
 
         File netMinecraftJsonFile = new File("../patches/net.minecraft.json");
-        JSONObject netMinecraftJson = readMMCJson(netMinecraftJsonFile, new File("../../../meta/net.minecraft/" + baseVersion + ".json"));
+        JSONObject netMinecraftJson = readMMCJson(netMinecraftJsonFile, new File(getRootDirectory() + "/meta/net.minecraft/" + baseVersion + ".json"));
         if (netMinecraftJson == null) {
             return;
         }
@@ -275,7 +281,7 @@ public class LauncherPatch extends Patch {
         }
 
         File orgLwjglJsonFile = new File("../patches/org.lwjgl.json");
-        JSONObject orgLwjglJson = readMMCJson(orgLwjglJsonFile, new File("../../../meta/org.lwjgl/" + lwjglVersion + ".json"));
+        JSONObject orgLwjglJson = readMMCJson(orgLwjglJsonFile, new File(getRootDirectory() + "/meta/org.lwjgl/" + lwjglVersion + ".json"));
         if (orgLwjglJson == null) {
             return;
         }
