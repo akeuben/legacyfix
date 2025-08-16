@@ -102,7 +102,7 @@ public class LauncherPatch extends Patch {
     }
 
     private static String getRootDirectory() {
-        if(!isPrism) {
+        if (!isPrism) {
             return "../../..";
         }
 
